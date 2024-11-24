@@ -1,0 +1,58 @@
+Filters rows based on criteria.
+package com.example.dataengineering.transformation; 
+import java.util.*;
+public class DataTransformation { public List<String[]> filterByCountry(List<String[]> data, String country) { return data.stream()
+.filter(row -> row[2].equalsIgnoreCase(country))
+.collect(Collectors.toList()); 
+} } 
+
+3.
+
+Data Storage Module (DataStorage.java): Writes processed data to a file. 
+package com.example.dataengineering.storage; 
+import java.io.*;
+import java.util.*;
+public class DataStorage { public void writeCSV(List<String[]> data, String outputPath)
+{ 
+try (FileWriter writer = new FileWriter(outputPath))
+{ 
+for (String[] row : data)
+{
+writer.append(String.join(",", row)).append("\n");
+}
+}
+catch (IOException e) { e.printStackTrace();
+} } }
+
+4. Data Analytics Module (DataAnalytics.java): Computes analytical metrics.
+package com.example.dataengineering.analytics;
+import java.util.*; 
+public class DataAnalytics { public double calculateAverageSalary(List<String[]> data)
+{
+return data.stream()
+.mapToDouble(row -> Double.parseDouble(row[4]))
+.average()
+.orElse(0); 
+} }
+
+
+5. Main Class (Main.java): Integrates all modules.
+package com.example;
+import com.example.dataengineering.ingestion.*;
+import com.example.dataengineering.transformation.*;
+import com.example.dataengineering.storage.*;
+import com.example.dataengineering.analytics.*;
+import java.util.*;
+public class Main { public static void main(String[] args)
+{
+String inputFile = "data/input.csv"; 
+String outputFile = "data/output.csv";
+DataIngestion ingestion = new DataIngestion();
+DataTransformation transformation = new DataTransformation();
+DataStorage storage = new DataStorage(); 
+DataAnalytics analytics = new DataAnalytics();
+List<String[]> data = ingestion.readCSV(inputFile);
+List<String[]> filteredData = transformation.filterByCountry(data, "USA"); 
+storage.writeCSV(filteredData, outputFile); 
+double avgSalary = analytics.calculateAverageSalary(filteredData);
+System.out.println("Average Salary in the USA: $" + avgSalary); } }
