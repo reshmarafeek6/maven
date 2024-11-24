@@ -1,0 +1,15 @@
+Reads and parses a CSV file.
+package com.example.dataengineering.ingestion; 
+import java.io.*;
+import java.util.*;
+public class DataIngestion { public List<String[]> readCSV(String filePath) { List<String[]> data = new ArrayList<>(); 
+try (BufferedReader br = new BufferedReader(new FileReader(filePath))) { String header = br.readLine();
+// Skip header String line;
+while ((line = br.readLine()) != null) { data.add(line.split(","));
+}
+} 
+catch (IOException e) { e.printStackTrace();
+}
+return data;
+}
+}
