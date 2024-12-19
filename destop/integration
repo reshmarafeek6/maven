@@ -1,0 +1,11 @@
+mvn archtype , cd filename , git init
+touch .gitignore
+echo "target/" >.gitignore
+echo ".idea/" >> .gitignore
+echo ".iml/" >> .gitignore
+git checkout -b master
+git add .
+git commit -m "committed"
+git remote add origin url of repo
+git push -u origin master
+git status
